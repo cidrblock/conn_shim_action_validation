@@ -1,7 +1,6 @@
 
 from ansible.plugins.connection import ConnectionBase
 from ansible.utils.display import Display
-from ansible.executor.task_executor import start_connection
 
 display = Display()
 
