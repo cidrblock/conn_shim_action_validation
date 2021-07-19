@@ -1,0 +1,6 @@
+all:
+  hosts:
+    mock_host1:
+      ansible_connection: cidrblock.conn_test.demo
+      ansible_user: brad
+      ansible_password: password
