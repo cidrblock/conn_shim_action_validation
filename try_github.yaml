@@ -1,0 +1,13 @@
+- hosts: gh_api_endpoint
+  gather_facts: False
+  tasks:
+  - name: gh get user
+    cidrblock.conn_test.github:
+      get: user
+    register: result
+ 
+  - name: gh get org
+    cidrblock.conn_test.github:
+      get: org
+    register: result
+

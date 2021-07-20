@@ -4,3 +4,5 @@ all:
       ansible_connection: cidrblock.conn_test.demo
       ansible_user: brad
       ansible_password: password
+    gh_api_endpoint:
+      ansible_connection: cidrblock.conn_test.github
