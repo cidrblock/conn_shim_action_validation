@@ -5,9 +5,17 @@
     cidrblock.conn_test.github:
       get: user
     register: result
+    ignore_errors: True
  
   - name: gh get org
     cidrblock.conn_test.github:
       get: org
     register: result
+    vars:
+      # ansible_gh_access_token: 5
+    ignore_errors: True
+
+
+  - debug:
+      msg: "show log for previous"
 

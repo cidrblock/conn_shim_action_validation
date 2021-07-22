@@ -6,3 +6,7 @@ all:
       ansible_password: password
     gh_api_endpoint:
       ansible_connection: cidrblock.conn_test.github
+      ansible_persistent_log_messages: True
+      ansible_persistent_log_message_length_max: 500
+
+

@@ -18,10 +18,13 @@ class ActionModule(ActionBase):
        
     def run(self, tmp=None, task_vars=None): 
         self._result = super(ActionModule, self).run(tmp, task_vars)
-        github = Connection(self._connection._socket_path)
+        connection_proxy = Connection(self._connection._socket_path)
         if self._task.args['get'] == "user":
-            self._result['user'] = github.exec('get_user')
+            # Reuses an existing connection if available, connection will remain across tasks
+            self._result['user'] = connection_proxy.indirect_method('get_user')
+            # Creates a new connection with every task
+            # self._result['user'] = self._connection.indirect_method('get_user')
         elif self._task.args['get'] == "org":
-            self._result['repos'] = github.exec('org_repos', org="ansible-network")
+            self._result['repos'] = connection_proxy.direct_method('org_repos', org="ansible-network")
         return self._result
      
