@@ -133,7 +133,7 @@ class PersistentConnection(NetworkConnectionBase):
         self._play_context = play_context
         self._log_level = None
         self._set_up_logger()
- 
+
     def log_with_pid(func):
         """decorator used to create a log message with PID and proc name"""
 
@@ -160,7 +160,7 @@ class PersistentConnection(NetworkConnectionBase):
         if self._log_level == logging.DEBUG:
             pid = os.getpid()
             name = subprocess.check_output(
-                "ps -p {pid} -o cmd=".format(pid=pid), shell=True
+                "ps -p {pid} -o command=".format(pid=pid), shell=True
             ).decode()
             msg = "({name}:{pid}) {msg}".format(msg=msg, name=name, pid=pid)
             return partial(self._logger.log, level=logging.DEBUG, msg=msg)
@@ -175,8 +175,8 @@ class PersistentConnection(NetworkConnectionBase):
         based on the connection configuration
         """
         log_level = ANSIBLE_VERBOSITY_TO_LOG_LEVEL[
-                    min(self._play_context.verbosity, 4)
-                ]
+            min(self._play_context.verbosity, 4)
+        ]
         if log_level != self._log_level:
             self._log_level = log_level
             logging.getLogger().setLevel(self._log_level)
@@ -205,22 +205,26 @@ class PersistentConnection(NetworkConnectionBase):
                 self.queue_message(
                     log_type,
                     message[
-                        0 : self.get_option("persistent_log_message_length_max")
+                        0 : self.get_option(
+                            "persistent_log_message_length_max"
+                        )
                     ],
                 )
                 return record
 
             logging.setLogRecordFactory(log_bridge)
-    
+
     @log_with_pid
     def set_options(self, task_keys=None, var_options=None, direct=None):
-        """ Handle inbound options, it is sent each time the Connection
+        """Handle inbound options, it is sent each time the Connection
         is initialized, per task. The NetworkConnectionBase class handles set_options
         It is unlikely that the new options received across the socket
         need to be used here at all"""
 
-        super().set_options(task_keys=task_keys, var_options=var_options, direct=direct)
-    
+        super().set_options(
+            task_keys=task_keys, var_options=var_options, direct=direct
+        )
+
     @log_with_pid
     def update_play_context(self, pc_data):
         """Handle the inbound play context, it is sent each time the Connection
@@ -239,7 +243,7 @@ class PersistentConnection(NetworkConnectionBase):
         play_context.deserialize(pc_data)
         self._play_context = play_context
         self._set_up_logger()
-      
+
 
 class Connection(PersistentConnection):
     """A sample persistent connection usign the PyGithub package
@@ -329,6 +333,7 @@ class Connection(PersistentConnection):
         """
         msg = "Indirect method called: {method}".format(method=method)
         self._log_with_pid(msg=msg)()
+
         try:
             return getattr(self._github, method)(*args, **kwargs).raw_data
         except AttributeError as exc:
